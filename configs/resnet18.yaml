@@ -1,0 +1,63 @@
+# Cheaper comparison: ImageNet-pretrained ResNet18, same recipe as the primary.
+experiment:
+  name: resnet18
+  seed: 42
+
+data:
+  data_dir: data                 # kaggle ... -p data --unzip ; the real root is auto-resolved
+  splits_dir: splits             # split_{train,val,test}.csv manifests (committed)
+  image_size: 224
+  val_fraction: 0.2              # of the pooled official train+val folders, grouped by patient
+  exclude_test_patients_from_trainval: true
+  cache_resized: true            # pre-resize once to image_size PNGs under data/cache_224/
+
+augment:                         # anatomically honest: positioning + exposure only
+  enabled: true
+  hflip_p: 0.5
+  rotate_deg: 7
+  translate: 0.05                # fraction of width/height
+  scale: 0.05                    # +-5% zoom, never a crop that can drop a lobe
+  brightness: 0.10
+  contrast: 0.10
+
+model:
+  arch: resnet18
+  pretrained: true
+  dropout: 0.2
+
+train:
+  device: auto
+  batch_size: 64
+  num_workers: 2
+  amp: true                      # CUDA only
+  deterministic: true
+  phase1:                        # frozen backbone, new head only
+    epochs: 3
+    lr: 1.0e-3
+    weight_decay: 1.0e-4
+    scheduler: none
+  phase2:                        # everything unfrozen
+    epochs: 12
+    lr: 1.0e-4
+    min_lr: 1.0e-6
+    weight_decay: 1.0e-4
+    scheduler: cosine
+    early_stopping_patience: 4
+  limit_train_batches: null      # set (or pass --limit-train-batches) for a CPU smoke run
+  limit_val_batches: null
+
+selection:
+  target_recall: 0.98            # operating point: max specificity s.t. val recall >= this
+  sensitivity_targets: [0.95, 0.98, 0.99]
+  metric: specificity_at_target_recall
+
+eval:
+  bootstrap_n: 2000
+  ci_level: 0.95
+  gradcam:
+    border_frac: 0.12
+    border_mass_threshold: 0.6
+
+paths:
+  runs_dir: runs                 # checkpoints (git-ignored)
+  results_dir: results

@@ -1,0 +1,87 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "prepare",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "prepare",
+        "--config",
+        "configs/densenet121.yaml"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "train densenet121",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "train",
+        "--config",
+        "configs/densenet121.yaml"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "train (smoke, CPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "train",
+        "--config",
+        "configs/smoke.yaml",
+        "--limit-train-batches",
+        "3"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "evaluate",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "evaluate"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "gradcam",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "gradcam",
+        "--per-case",
+        "3"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "report",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pneumonia.cli",
+      "args": [
+        "report"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pneumonia: download data (kaggle)",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-c",
+        "import sys; from kaggle.cli import main; sys.argv=['kaggle','datasets','download','-d','paultimothymooney/chest-xray-pneumonia','-p','data','--unzip']; main()"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: prepare",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "prepare",
+        "--config",
+        "configs/densenet121.yaml"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: train densenet121",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "train",
+        "--config",
+        "configs/densenet121.yaml"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: train resnet18",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "train",
+        "--config",
+        "configs/resnet18.yaml"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: train resnet18_scratch",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "train",
+        "--config",
+        "configs/resnet18_scratch.yaml"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: evaluate",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "evaluate"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: gradcam",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "gradcam",
+        "--per-case",
+        "3"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: report",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pneumonia.cli",
+        "report"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "pneumonia: FULL PIPELINE",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "pneumonia: prepare",
+        "pneumonia: train densenet121",
+        "pneumonia: train resnet18",
+        "pneumonia: train resnet18_scratch",
+        "pneumonia: evaluate",
+        "pneumonia: gradcam",
+        "pneumonia: report"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "pneumonia: tests",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

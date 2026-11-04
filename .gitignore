@@ -1,0 +1,54 @@
+# --- data: never committed (download with the kaggle command in README) ---
+data/
+*.zip
+
+# --- environments ---
+.venv/
+venv/
+env/
+.env
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- training outputs: checkpoints and per-run folders are regenerated ---
+runs/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.npy
+*.npz
+
+# --- large files (GitHub rejects >100 MB; we keep the repo well under 50 MB) ---
+*.tar
+*.tar.gz
+*.h5
+
+# --- results: predictions and audit scratch stay local; the committed results are
+#     results/figures/*.png, results/results.csv, results/metrics.json,
+#     results/*.md (stage figures with `git add -f results/figures`) ---
+results/predictions/
+results/audit/image_sizes.csv
+results/gradcam/
+
+# --- editors / OS ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+runs_smoke/
+results_smoke/
+splits_smoke/
+data_synthetic/
