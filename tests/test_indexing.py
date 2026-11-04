@@ -21,6 +21,11 @@ from pneumonia.indexing import (
         ("IM-0115-0001.jpeg", "IM-0115", "normal"),
         ("NORMAL2-IM-0222-0001.jpeg", "NORMAL2-IM-0222", "normal"),
         ("NORMAL2-IM-0222-0002.jpeg", "NORMAL2-IM-0222", "normal"),
+        # extra suffixes that occur in the real Kaggle files (144 images in v0.1.0 went unparsed)
+        ("IM-0429-0001-0001.jpeg", "IM-0429", "normal"),
+        ("IM-0429-0001-0002.jpeg", "IM-0429", "normal"),
+        ("NORMAL2-IM-1427-0001-0001.jpeg", "NORMAL2-IM-1427", "normal"),
+        ("person1_virus_6_1.jpeg", "person1", "virus"),
     ],
 )
 def test_parse_real_looking_names(name, pid, subtype):
@@ -63,3 +68,7 @@ def test_index_and_counts(synth_tree):
     t = count_table(df)
     assert t.loc["train", "images_NORMAL"] == 6
     assert t.loc["train", "patients_PNEUMONIA"] == 3  # 2 images per synthetic patient
+
+
+def test_extra_suffix_groups_with_plain_name():
+    assert parse_patient_id("IM-0439-0001.jpeg") == parse_patient_id("IM-0439-0001-0002.jpeg")

@@ -20,10 +20,12 @@ DOWNLOAD_CMD = f"kaggle datasets download -d {KAGGLE_SLUG} -p data --unzip"
 OFFICIAL_SPLITS = ("train", "val", "test")
 IMAGE_EXTS = {".jpeg", ".jpg", ".png"}
 
-# person8_bacteria_37.jpeg -> person8 ; person1_virus_6.jpeg -> person1
-_PNEUMONIA_RE = re.compile(r"^(person\d+)_(bacteria|virus)_\d+$", re.IGNORECASE)
-# IM-0115-0001.jpeg -> IM-0115 ; NORMAL2-IM-0222-0001.jpeg -> NORMAL2-IM-0222
-_NORMAL_RE = re.compile(r"^((?:NORMAL2-)?IM-\d+)-\d+$", re.IGNORECASE)
+# person8_bacteria_37.jpeg -> person8 ; person1_virus_6.jpeg -> person1 ;
+# person1_virus_6_1.jpeg (rare extra suffix in the Kaggle copy) -> person1
+_PNEUMONIA_RE = re.compile(r"^(person\d+)_(bacteria|virus)_\d+(?:_\d+)*$", re.IGNORECASE)
+# IM-0115-0001.jpeg -> IM-0115 ; NORMAL2-IM-0222-0001.jpeg -> NORMAL2-IM-0222 ;
+# IM-0429-0001-0002.jpeg (extra study/series suffix) -> IM-0429
+_NORMAL_RE = re.compile(r"^((?:NORMAL2-)?IM-\d+)(?:-\d+)+$", re.IGNORECASE)
 
 
 class DatasetNotFoundError(FileNotFoundError):

@@ -1,0 +1,550 @@
+{
+  "generated_at": "2026-11-04T21:56:50Z",
+  "git_commit": "a4bb440",
+  "versions": {
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "torch": "2.11.0+cu130",
+    "torchvision": "0.26.0+cu130",
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "matplotlib": "3.10.0",
+    "pillow": "11.3.0",
+    "cuda_available": "True",
+    "cuda": "13.0",
+    "gpu": "Tesla T4"
+  },
+  "seed": 42,
+  "target_recall": 0.98,
+  "primary_model": "densenet121",
+  "dataset": {
+    "kaggle": "paultimothymooney/chest-xray-pneumonia",
+    "root": "data/chest_xray",
+    "splits": {
+      "generated_at": "2026-11-04T21:38:15Z",
+      "kaggle_dataset": "paultimothymooney/chest-xray-pneumonia",
+      "download_cmd": "kaggle datasets download -d paultimothymooney/chest-xray-pneumonia -p data --unzip",
+      "dataset_root": "data/chest_xray",
+      "n_images": 5856,
+      "n_patients": 3257,
+      "n_unparsed_names": 144,
+      "official_counts": [
+        {
+          "official_split": "test",
+          "images_NORMAL": 234,
+          "images_PNEUMONIA": 390,
+          "patients_NORMAL": 234,
+          "patients_PNEUMONIA": 202,
+          "images_total": 624,
+          "patients_total": 436,
+          "pos_to_neg_ratio": 1.67
+        },
+        {
+          "official_split": "train",
+          "images_NORMAL": 1341,
+          "images_PNEUMONIA": 3875,
+          "patients_NORMAL": 1340,
+          "patients_PNEUMONIA": 1636,
+          "images_total": 5216,
+          "patients_total": 2976,
+          "pos_to_neg_ratio": 2.89
+        },
+        {
+          "official_split": "val",
+          "images_NORMAL": 8,
+          "images_PNEUMONIA": 8,
+          "patients_NORMAL": 8,
+          "patients_PNEUMONIA": 7,
+          "images_total": 16,
+          "patients_total": 15,
+          "pos_to_neg_ratio": 1.0
+        }
+      ],
+      "split_counts": [
+        {
+          "split": "train",
+          "class_name": "NORMAL",
+          "images": 1080,
+          "patients": 1079
+        },
+        {
+          "split": "train",
+          "class_name": "PNEUMONIA",
+          "images": 2720,
+          "patients": 1178
+        },
+        {
+          "split": "train",
+          "class_name": "ALL",
+          "images": 3800,
+          "patients": 2257
+        },
+        {
+          "split": "val",
+          "class_name": "NORMAL",
+          "images": 269,
+          "patients": 269
+        },
+        {
+          "split": "val",
+          "class_name": "PNEUMONIA",
+          "images": 706,
+          "patients": 295
+        },
+        {
+          "split": "val",
+          "class_name": "ALL",
+          "images": 975,
+          "patients": 564
+        },
+        {
+          "split": "test",
+          "class_name": "NORMAL",
+          "images": 234,
+          "patients": 234
+        },
+        {
+          "split": "test",
+          "class_name": "PNEUMONIA",
+          "images": 390,
+          "patients": 202
+        },
+        {
+          "split": "test",
+          "class_name": "ALL",
+          "images": 624,
+          "patients": 436
+        }
+      ],
+      "split_info": {
+        "test_trainval_shared_patient_ids": 170,
+        "dropped_trainval_images_for_test_overlap": 457,
+        "val_fraction": 0.2,
+        "n_splits": 5,
+        "seed": 42
+      },
+      "shortcut_probe_val_auroc": {
+        "size_only": 0.9188,
+        "border_intensity_only": 0.7716,
+        "size_and_border": 0.9392,
+        "note": "Val AUROC of a logistic regression on non-anatomical metadata only. 0.5 = no shortcut signal."
+      }
+    }
+  },
+  "models": {
+    "densenet121": {
+      "status": "evaluated",
+      "arch": "densenet121",
+      "pretrained": true,
+      "best_epoch": 10,
+      "checkpoint_sha256_16": "d3b9a36abeddcb38",
+      "val_operating_point": {
+        "raw_threshold": 0.27586597204208374,
+        "threshold": 0.2730747312307358,
+        "recall": 0.9801699716713881,
+        "specificity": 0.9962825278810409,
+        "target_recall": 0.98
+      },
+      "shipped_threshold": 0.2730747312307358,
+      "test_at_shipped": {
+        "threshold": 0.2730747312307358,
+        "n": 624,
+        "n_pos": 390,
+        "n_neg": 234,
+        "recall": 0.9948717948717949,
+        "specificity": 0.7649572649572649,
+        "precision": 0.8758465011286681,
+        "npv": 0.988950276243094,
+        "f2": 0.9685471792311533,
+        "balanced_accuracy": 0.8799145299145299,
+        "auroc": 0.9720304624150778,
+        "auprc": 0.9740326836217512,
+        "tp": 388,
+        "fp": 55,
+        "tn": 179,
+        "fn": 2
+      },
+      "test_ci_at_shipped": {
+        "recall": {
+          "point": 0.9948717948717949,
+          "lo": 0.9871794871794872,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.7649572649572649,
+          "lo": 0.7094017094017094,
+          "hi": 0.8163461538461533
+        },
+        "precision": {
+          "point": 0.8758465011286681,
+          "lo": 0.8505494505494505,
+          "hi": 0.9007222486024474
+        },
+        "npv": {
+          "point": 0.988950276243094,
+          "lo": 0.9719101123595506,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "test_ci_at_0.5": {
+        "recall": {
+          "point": 0.9923076923076923,
+          "lo": 0.982051282051282,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.811965811965812,
+          "lo": 0.7606837606837606,
+          "hi": 0.8589743589743589
+        },
+        "precision": {
+          "point": 0.8979118329466357,
+          "lo": 0.8738667561466659,
+          "hi": 0.9218009478672986
+        },
+        "npv": {
+          "point": 0.9844559585492227,
+          "lo": 0.9648196792041013,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "recall_target_sensitivity": [
+        {
+          "target_recall": 0.95,
+          "threshold": 0.8071559369564056,
+          "val_recall": 0.9504249291784702,
+          "val_specificity": 1.0,
+          "test_recall": 0.9692307692307692,
+          "test_specificity": 0.8504273504273504,
+          "test_fp": 35,
+          "test_fn": 12
+        },
+        {
+          "target_recall": 0.98,
+          "threshold": 0.2730747312307358,
+          "val_recall": 0.9801699716713881,
+          "val_specificity": 0.9962825278810409,
+          "test_recall": 0.9948717948717949,
+          "test_specificity": 0.7649572649572649,
+          "test_fp": 55,
+          "test_fn": 2
+        },
+        {
+          "target_recall": 0.99,
+          "threshold": 0.011769911274313927,
+          "val_recall": 0.990084985835694,
+          "val_specificity": 0.9591078066914498,
+          "test_recall": 0.9974358974358974,
+          "test_specificity": 0.5512820512820513,
+          "test_fp": 105,
+          "test_fn": 1
+        }
+      ],
+      "summary_sentence": "densenet121 at the val-tuned threshold 0.273 missed 2 of 390 pneumonia cases (recall 0.995) and raised 55 false alarms on 234 normal films (specificity 0.765)."
+    },
+    "resnet18": {
+      "status": "evaluated",
+      "arch": "resnet18",
+      "pretrained": true,
+      "best_epoch": 12,
+      "checkpoint_sha256_16": "28e9375d3e1aa544",
+      "val_operating_point": {
+        "raw_threshold": 0.5452562570571899,
+        "threshold": 0.528051108121872,
+        "recall": 0.9801699716713881,
+        "specificity": 0.9888475836431226,
+        "target_recall": 0.98
+      },
+      "shipped_threshold": 0.528051108121872,
+      "test_at_shipped": {
+        "threshold": 0.528051108121872,
+        "n": 624,
+        "n_pos": 390,
+        "n_neg": 234,
+        "recall": 0.9948717948717949,
+        "specificity": 0.6837606837606838,
+        "precision": 0.8398268398268398,
+        "npv": 0.9876543209876543,
+        "f2": 0.9594460929772503,
+        "balanced_accuracy": 0.8393162393162393,
+        "auroc": 0.9592702169625247,
+        "auprc": 0.9626137536083792,
+        "tp": 388,
+        "fp": 74,
+        "tn": 160,
+        "fn": 2
+      },
+      "test_ci_at_shipped": {
+        "recall": {
+          "point": 0.9948717948717949,
+          "lo": 0.9871794871794872,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.6837606837606838,
+          "lo": 0.6239316239316239,
+          "hi": 0.7435897435897436
+        },
+        "precision": {
+          "point": 0.8398268398268398,
+          "lo": 0.8155136268343816,
+          "hi": 0.8663697104677061
+        },
+        "npv": {
+          "point": 0.9876543209876543,
+          "lo": 0.9683544303797469,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "test_ci_at_0.5": {
+        "recall": {
+          "point": 0.9948717948717949,
+          "lo": 0.9871794871794872,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.6752136752136753,
+          "lo": 0.6153846153846154,
+          "hi": 0.7350427350427351
+        },
+        "precision": {
+          "point": 0.8362068965517241,
+          "lo": 0.8117154811715481,
+          "hi": 0.8625277161862528
+        },
+        "npv": {
+          "point": 0.9875,
+          "lo": 0.967741935483871,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "recall_target_sensitivity": [
+        {
+          "target_recall": 0.95,
+          "threshold": 0.9753677845001221,
+          "val_recall": 0.9504249291784702,
+          "val_specificity": 0.9925650557620818,
+          "test_recall": 0.9717948717948718,
+          "test_specificity": 0.8461538461538461,
+          "test_fp": 36,
+          "test_fn": 11
+        },
+        {
+          "target_recall": 0.98,
+          "threshold": 0.528051108121872,
+          "val_recall": 0.9801699716713881,
+          "val_specificity": 0.9888475836431226,
+          "test_recall": 0.9948717948717949,
+          "test_specificity": 0.6837606837606838,
+          "test_fp": 74,
+          "test_fn": 2
+        },
+        {
+          "target_recall": 0.99,
+          "threshold": 0.26146043837070465,
+          "val_recall": 0.990084985835694,
+          "val_specificity": 0.9814126394052045,
+          "test_recall": 0.9948717948717949,
+          "test_specificity": 0.6410256410256411,
+          "test_fp": 84,
+          "test_fn": 2
+        }
+      ],
+      "summary_sentence": "resnet18 at the val-tuned threshold 0.528 missed 2 of 390 pneumonia cases (recall 0.995) and raised 74 false alarms on 234 normal films (specificity 0.684)."
+    },
+    "resnet18_scratch": {
+      "status": "evaluated",
+      "arch": "resnet18",
+      "pretrained": false,
+      "best_epoch": 8,
+      "checkpoint_sha256_16": "3907881460a24fd4",
+      "val_operating_point": {
+        "raw_threshold": 0.9568532705307007,
+        "threshold": 0.9564293324947357,
+        "recall": 0.9801699716713881,
+        "specificity": 0.9628252788104089,
+        "target_recall": 0.98
+      },
+      "shipped_threshold": 0.9564293324947357,
+      "test_at_shipped": {
+        "threshold": 0.9564293324947357,
+        "n": 624,
+        "n_pos": 390,
+        "n_neg": 234,
+        "recall": 0.9948717948717949,
+        "specificity": 0.4829059829059829,
+        "precision": 0.762278978388998,
+        "npv": 0.9826086956521739,
+        "f2": 0.9376510391493476,
+        "balanced_accuracy": 0.7388888888888889,
+        "auroc": 0.9304185842647381,
+        "auprc": 0.9485418047524383,
+        "tp": 388,
+        "fp": 121,
+        "tn": 113,
+        "fn": 2
+      },
+      "test_ci_at_shipped": {
+        "recall": {
+          "point": 0.9948717948717949,
+          "lo": 0.9871794871794872,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.4829059829059829,
+          "lo": 0.4188034188034188,
+          "hi": 0.5512820512820513
+        },
+        "precision": {
+          "point": 0.762278978388998,
+          "lo": 0.7408829174664108,
+          "hi": 0.7870182555780934
+        },
+        "npv": {
+          "point": 0.9826086956521739,
+          "lo": 0.956140350877193,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "test_ci_at_0.5": {
+        "recall": {
+          "point": 1.0,
+          "lo": 1.0,
+          "hi": 1.0
+        },
+        "specificity": {
+          "point": 0.14957264957264957,
+          "lo": 0.10683760683760683,
+          "hi": 0.19658119658119658
+        },
+        "precision": {
+          "point": 0.6621392190152802,
+          "lo": 0.6510851419031719,
+          "hi": 0.6747404844290658
+        },
+        "npv": {
+          "point": 1.0,
+          "lo": 1.0,
+          "hi": 1.0
+        },
+        "_meta": {
+          "n_boot": 2000,
+          "alpha": 0.050000000000000044,
+          "seed": 42,
+          "stratified": true
+        }
+      },
+      "recall_target_sensitivity": [
+        {
+          "target_recall": 0.95,
+          "threshold": 0.9854082763195038,
+          "val_recall": 0.9504249291784702,
+          "val_specificity": 0.9702602230483272,
+          "test_recall": 0.9717948717948718,
+          "test_specificity": 0.6153846153846154,
+          "test_fp": 90,
+          "test_fn": 11
+        },
+        {
+          "target_recall": 0.98,
+          "threshold": 0.9564293324947357,
+          "val_recall": 0.9801699716713881,
+          "val_specificity": 0.9628252788104089,
+          "test_recall": 0.9948717948717949,
+          "test_specificity": 0.4829059829059829,
+          "test_fp": 121,
+          "test_fn": 2
+        },
+        {
+          "target_recall": 0.99,
+          "threshold": 0.8910199999809265,
+          "val_recall": 0.990084985835694,
+          "val_specificity": 0.9107806691449815,
+          "test_recall": 1.0,
+          "test_specificity": 0.3888888888888889,
+          "test_fp": 143,
+          "test_fn": 0
+        }
+      ],
+      "summary_sentence": "resnet18_scratch at the val-tuned threshold 0.956 missed 2 of 390 pneumonia cases (recall 0.995) and raised 121 false alarms on 234 normal films (specificity 0.483)."
+    }
+  },
+  "error_analysis": {
+    "n_false_negatives": 2,
+    "n_positives": 390,
+    "fn_subtype_counts": {
+      "bacteria": 1,
+      "virus": 1
+    },
+    "positives_subtype_counts": {
+      "bacteria": 242,
+      "virus": 148
+    },
+    "viral_share_fn": 0.5,
+    "viral_share_all_positives": 0.37948717948717947,
+    "mean_intensity_fn": 0.4926999509334564,
+    "mean_intensity_tp": 0.4674224023198344,
+    "contrast_std_fn": 0.21618633717298508,
+    "contrast_std_tp": 0.21949494236446532,
+    "fn_median_score": 0.09419532865285873,
+    "fn_lowest_scores": [
+      0.0015999999595806003,
+      0.1868000030517578
+    ],
+    "miss_rate_by_subtype": {
+      "bacteria": 0.004132231404958678,
+      "virus": 0.006756756756756757
+    }
+  },
+  "test_access_log": [
+    {
+      "model": "densenet121",
+      "checkpoint_sha256_16": "d3b9a36abeddcb38",
+      "scored_at": "2026-11-04T21:56:34Z",
+      "n": 624
+    },
+    {
+      "model": "resnet18",
+      "checkpoint_sha256_16": "28e9375d3e1aa544",
+      "scored_at": "2026-11-04T21:56:39Z",
+      "n": 624
+    },
+    {
+      "model": "resnet18_scratch",
+      "checkpoint_sha256_16": "3907881460a24fd4",
+      "scored_at": "2026-11-04T21:56:45Z",
+      "n": 624
+    }
+  ]
+}

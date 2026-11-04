@@ -11,44 +11,83 @@ Can an ImageNet-pretrained CNN flag pneumonia at a **triage operating point**, w
 Kaggle `paultimothymooney/chest-xray-pneumonia` (Kermany et al.). The official train+val folders are pooled and re-split by patient (`StratifiedGroupKFold`, 80/20, seed 42); the official test folder is held out and scored once. Models: DenseNet121 (primary) and ResNet18, both ImageNet-pretrained, plus a ResNet18 trained from scratch, each with a single logit. Training uses `BCEWithLogitsLoss(pos_weight = n_neg/n_pos < 1)` and two-phase fine-tuning (frozen backbone for 3 epochs, then full fine-tuning with AdamW and cosine decay, early stopping). The checkpoint is selected by val specificity at recall ≥ 0.98, and the threshold is chosen on val as max specificity subject to recall ≥ 0.98, then frozen.
 
 <!-- AUTO:split_table -->
-_Run `pneumonia prepare` to generate the split table._
+| Split | NORMAL images (patients) | PNEUMONIA images (patients) | Total images | Distinct patients |
+|---|---|---|---|---|
+| train | 1080 (1079) | 2720 (1178) | 3800 | 2257 |
+| val | 269 (269) | 706 (295) | 975 | 564 |
+| test | 234 (234) | 390 (202) | 624 | 436 |
+
+Pooled official train+val re-split by patient with `StratifiedGroupKFold` (seed 42, val fraction 0.2); official test untouched. Patient ids shared between the test folder and train/val: 170; train/val images dropped to keep the test patients unseen: 457. Unparsed file names: 144.
+
+Metadata-only shortcut probe (logistic regression, val AUROC; 0.5 = no signal): image size only **0.9188**, border intensity only **0.7716**, both **0.9392**.
 <!-- /AUTO:split_table -->
 
 ## 3. Results (test, n ≈ 624)
 
 <!-- AUTO:headline -->
-_Headline pending: no trained checkpoint was evaluated yet._
+**densenet121**, threshold 0.273 chosen on val for recall >= 0.98: test recall **0.995** [0.987, 1.000] at specificity **0.765** [0.709, 0.816] - missed **2 of 390** pneumonia cases, **55 false alarms** on 234 normal films. The always-PNEUMONIA baseline scores recall 1.000 at specificity 0.000 (234 false alarms).
 <!-- /AUTO:headline -->
 
 <!-- AUTO:results_table -->
-_Pending: run the pipeline, then `pneumonia report`._
+| Model | Threshold | Recall [95% CI] | Specificity [95% CI] | False alarms (FP) | Missed (FN) | PPV | NPV | F2 | Bal. acc. | AUROC | AUPRC |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| *always PNEUMONIA* (baseline) | constant | 1.000 | 0.000 | 234 | 0 | 0.625 | — | 0.893 | 0.500 | 0.500 | 0.625 |
+| *always NORMAL* (baseline) | constant | 0.000 | 1.000 | 0 | 390 | — | 0.375 | 0.000 | 0.500 | 0.500 | 0.625 |
+| *random score* (baseline) | val-tuned (recall>=0.98): 0.018 | 0.982 | 0.030 | 227 | 7 | 0.628 | 0.500 | 0.882 | 0.506 | 0.482 | 0.608 |
+| *random score* (baseline) | default 0.5: 0.500 | 0.485 | 0.491 | 119 | 201 | 0.614 | 0.364 | 0.506 | 0.488 | 0.482 | 0.608 |
+| **densenet121** | val-tuned (recall>=0.98): 0.273 | 0.995 [0.987, 1.000] | 0.765 [0.709, 0.816] | 55 | 2 | 0.876 | 0.989 | 0.969 | 0.880 | 0.972 | 0.974 |
+| **densenet121** | default 0.5: 0.500 | 0.992 [0.982, 1.000] | 0.812 [0.761, 0.859] | 44 | 3 | 0.898 | 0.984 | 0.972 | 0.902 | 0.972 | 0.974 |
+| **resnet18** | val-tuned (recall>=0.98): 0.528 | 0.995 [0.987, 1.000] | 0.684 [0.624, 0.744] | 74 | 2 | 0.840 | 0.988 | 0.959 | 0.839 | 0.959 | 0.963 |
+| **resnet18** | default 0.5: 0.500 | 0.995 [0.987, 1.000] | 0.675 [0.615, 0.735] | 76 | 2 | 0.836 | 0.988 | 0.958 | 0.835 | 0.959 | 0.963 |
+| **resnet18_scratch** | val-tuned (recall>=0.98): 0.956 | 0.995 [0.987, 1.000] | 0.483 [0.419, 0.551] | 121 | 2 | 0.762 | 0.983 | 0.938 | 0.739 | 0.930 | 0.949 |
+| **resnet18_scratch** | default 0.5: 0.500 | 1.000 [1.000, 1.000] | 0.150 [0.107, 0.197] | 199 | 0 | 0.662 | 1.000 | 0.907 | 0.575 | 0.930 | 0.949 |
+
+Test split: 624 images (390 PNEUMONIA, 234 NORMAL). NPV is undefined (—) when the model never predicts NORMAL.
 <!-- /AUTO:results_table -->
 
 Sensitivity of the operating point to the recall target:
 
 <!-- AUTO:sensitivity_table -->
-_Pending._
+| Recall target (val) | Threshold | Val recall | Val specificity | Test recall | Test specificity | Test FP | Test FN |
+|---|---|---|---|---|---|---|---|
+| 0.95 | 0.807 | 0.950 | 1.000 | 0.969 | 0.850 | 35 | 12 |
+| 0.98 | 0.273 | 0.980 | 0.996 | 0.995 | 0.765 | 55 | 2 |
+| 0.99 | 0.012 | 0.990 | 0.959 | 0.997 | 0.551 | 105 | 1 |
 <!-- /AUTO:sensitivity_table -->
 
 ![Operating curve](results/figures/threshold_operating_curve.png)
 
-**Interpretation (fill in from the numbers above):** (a) how much specificity the 0.98 target costs relative to the 0.95 target; (b) whether test recall held at the val-tuned threshold, or slipped below 0.98, and whether the CI's lower bound is under the target; (c) how far the pretrained models sit above the from-scratch ResNet18 at the same recall; (d) the NPV, i.e. what a NEGATIVE call means at this prevalence. If specificity collapses at 0.98, give the number here and say so.
+**Interpretation.**
+- **(a) Price of the recall target.** Moving the val target from 0.95 to 0.98 cut test misses from 12 to 2, but raised false alarms from 35 to 55 (test specificity 0.850 → 0.765). Pushing to 0.99 bought one more catch (1 miss) for 105 false alarms: **specificity collapses to 0.551 at the 0.99 target.** The val threshold there is 0.012, effectively "flag almost everything".
+- **(b) Did recall hold?** Yes. Test recall is 0.995 [0.987, 1.000] at the val-tuned threshold, and the CI's lower bound stays above the 0.98 target. The problem is the other side: val specificity was 0.996, test specificity 0.765 [0.709, 0.816]. The val split, drawn from the official training pool, is much easier than the separately curated test folder; 39 leaked val normals (see README, *Known issues*) make it easier still. The threshold transferred for recall but not for specificity.
+- **(c) What transfer learning bought.** At the same test recall (0.995), the from-scratch ResNet18 raises 121 false alarms (specificity 0.483), pretrained ResNet18 74 (0.684), and pretrained DenseNet121 55 (0.765). AUROC rises from 0.930 to 0.959 to 0.972. Pretraining is worth about 28 points of specificity at the operating point.
+- **(d) What a NEGATIVE call means.** NPV 0.989: of 181 films called NORMAL, 179 were normal. PPV 0.876: about 1 in 8 alarms is false. At this test prevalence (62.5%), that is the triage trade the threshold was set for.
 
 ## 4. Explanation audit
 
 ![Grad-CAM panel](results/figures/gradcam_panel.png)
 
 <!-- AUTO:gradcam_audit -->
-_Pending._
+| Case type | Maps | Auto: off-anatomy? | Auto: empty | By eye: lung | By eye: outside | By eye: mixed | By eye: empty | Not reviewed |
+|---|---|---|---|---|---|---|---|---|
+| True positives | 3 | 0 | 0 | 1 | 1 | 1 | 0 | 0 |
+| False negatives | 2 | 2 | 0 | 0 | 2 | 0 | 0 | 0 |
+| False positives | 3 | 0 | 0 | 1 | 0 | 2 | 0 | 0 |
+| True negatives | 3 | 0 | 3 | 0 | 0 | 0 | 3 | 0 |
+| **All** | 11 | 2 | 3 | 2 | 3 | 3 | 3 | 0 |
+
+Auto-flag off-anatomy? = CAM peak in the outer 12% band, or >60% of CAM mass there (a spatially uniform map puts 42% there); empty = no positive PNEUMONIA evidence anywhere (expected for confident negatives). Mean border mass over the sampled maps: 0.422. Manual columns come from `results/gradcam_audit.csv`, filled by eye.
 <!-- /AUTO:gradcam_audit -->
 
-**Observed (fill in after looking):**
+**Observed (by eye, 11 maps):**
 
-* *True positives:* where is the activation? Inside the lung fields (which lobe), or on the mediastinum, diaphragm or edges?
-* *False negatives:* is the map empty (the model saw no evidence), or does it sit on the right region with too little weight?
-* *False positives:* what drove the alarm? Lung markings, or a border, letter or arm?
-* *True negatives:* weak or empty maps are expected (see README).
-* **Count:** __ of __ sampled maps are off-anatomy by eye, versus __ auto-flagged.
+* *True positives:* 1 of 3 on the lungs (broad bilateral activation). The other 2 are hottest over the **top-right corner text** (timestamp; scanner mA/kV block), with lung activation secondary.
+* *False negatives:* both maps are **cold over the lungs**, with only a spot at the bottom-right image edge. The model saw no lung evidence; it did not just underweight it.
+* *False positives:* 2 of 3 put a strong focus on the **"R" laterality letter**. The third reads a hazy, low-contrast normal film as opacity.
+* *True negatives:* all 3 empty (p = 0.000), as expected.
+* **Count:** of the 8 non-empty maps, **6 have substantial off-anatomy activation by eye** (3 outside, 3 mixed) and only 2 are lung-only. **4 hit burnt-in text or the "R" letter.** The border heuristic auto-flagged just 2 (the false negatives) and missed every text/letter case, so it under-reports the problem.
+
+Two measurements that don't depend on Grad-CAM point the same way. Image size alone predicts the class with val AUROC 0.919, and PNEUMONIA films are systematically wider (aspect ratio ≈ 1.5 vs ≈ 1.25), a difference the square resize leaves visible. **Conclusion: the model partly relies on acquisition artefacts, so its test score overstates how well it reads lung parenchyma.**
 
 The metadata-only shortcut probe (section 2 table) says how much class signal sits outside the lungs at all.
 
@@ -57,19 +96,30 @@ The metadata-only shortcut probe (section 2 table) says how much class signal si
 ![Score histogram](results/figures/score_histogram.png)
 
 <!-- AUTO:error_analysis -->
-_Pending._
+- False negatives: **2 of 390** test pneumonias. Subtypes among misses: {'bacteria': 1, 'virus': 1} (all positives: {'bacteria': 242, 'virus': 148}).
+- Miss rate by subtype: bacteria 0.004, virus 0.007. Viral share among misses 0.500 vs 0.379 among all positives.
+- Exposure: mean pixel intensity of misses 0.493 vs 0.467 for true positives; contrast (pixel std) 0.216 vs 0.219.
+- Lowest-scored misses (the confidently wrong ones): [0.0016, 0.1868]. Full list: `results/false_negatives.csv`.
 <!-- /AUTO:error_analysis -->
 
-**Are the misses early/subtle, viral, or poorly exposed?** Answer from the subtype miss rates and the exposure statistics above, and from opening `results/false_negatives.csv`.
+**Are the misses early/subtle, viral, or poorly exposed?** Only 2 misses, so no subtype or exposure conclusion is possible: 1 bacterial (p = 0.002, the confidently wrong one), 1 viral (p = 0.187). Their brightness (0.493 vs 0.467 for true positives) and contrast (0.216 vs 0.219) are unremarkable, so exposure is not the explanation. Both Grad-CAM maps are cold over the lungs, which fits subtle or early opacities that the model, leaning partly on artefacts, did not pick up. The real error budget at this threshold is the **55 false alarms**, not the misses. Two of the three inspected false alarms were driven at least partly by the "R" marker.
 
-**Next:** external adult/multi-centre validation; lung-mask-based CAM scoring, and training on lung crops to remove border shortcuts; calibration; repeated grouped CV for threshold selection.
+**Next:**
+1. **Remove the shortcuts and re-measure.** Use an aspect-preserving resize (pad, don't squash), mask burnt-in text and the laterality letter, and train on lung-field crops. Then rerun the size-only probe and the Grad-CAM audit, with lung masks so the audit reports "% of CAM inside the lungs".
+2. **Pick the threshold on a harder split** (repeated grouped CV, or a held-out acquisition batch) so val specificity stops being 0.996 when test is 0.765.
+3. Re-run the pipeline with the fixed parser.
+4. Then calibration, and external adult/multi-centre validation.
 
 ## 6. Resume line (auto-filled)
 
 <!-- AUTO:resume -->
-_Fill after the run: recall [X]% at specificity [Y]%._
+> Fine-tuned an ImageNet-pretrained DenseNet121 to detect pneumonia in 5.8k chest radiographs under patient-grouped splits, tuning the decision threshold for 99.5% recall at 76.5% specificity on the held-out test set against an always-positive baseline (recall 100%, specificity 0%), and used Grad-CAM to audit whether the model attends to lung fields rather than acquisition artefacts.
 <!-- /AUTO:resume -->
 
+**Suggested wording, reflecting the audit finding (recommended):**
+
+> Fine-tuned an ImageNet-pretrained DenseNet121 to detect pneumonia in 5.8k paediatric chest radiographs under patient-grouped splits, tuning the decision threshold for 99.5% recall at 76.5% specificity on the held-out test set (vs. 100% / 0% for an always-positive baseline; ImageNet pretraining halved false alarms vs. training from scratch), and used Grad-CAM plus a metadata-only probe to show the model partly relies on acquisition artefacts such as laterality markers.
+
 <!-- AUTO:versions -->
-_Pending._
+Generated 2026-11-04T21:56:50Z (git a4bb440), seed 42; python 3.13.16, torch 2.11.0+cu130, torchvision 0.26.0+cu130, numpy 2.4.6, scikit-learn 1.6.1; GPU Tesla T4.
 <!-- /AUTO:versions -->

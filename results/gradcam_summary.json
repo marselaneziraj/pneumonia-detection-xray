@@ -1,0 +1,14 @@
+{
+  "n_maps": 11,
+  "threshold": 0.273074735,
+  "auto_off_anatomy": 2,
+  "by_case_type": {
+    "False negatives": 2,
+    "False positives": 0,
+    "True negatives": 0,
+    "True positives": 0
+  },
+  "mean_border_mass": 0.422125,
+  "uniform_map_border_mass": 0.422,
+  "note": "auto_flag is a geometric heuristic; fill manual_location (lung / outside / mixed) in gradcam_audit.csv after looking at the panel, then run `pneumonia report`."
+}

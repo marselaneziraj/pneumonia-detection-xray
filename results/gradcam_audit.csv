@@ -1,0 +1,12 @@
+case_type,path,subtype,prob,border_mass,peak_x,peak_y,auto_flag,manual_location,manual_notes
+True positives,test/PNEUMONIA/person139_bacteria_664.jpeg,bacteria,1.0,0.295,0.785,0.498,central,lung,"Broad activation over both lung fields and mediastinum, strongest over the left lung; plausible."
+True positives,test/PNEUMONIA/person1632_virus_2827.jpeg,virus,1.0,0.327,0.789,0.215,central,outside,"Hottest spot in the top-right corner over the left shoulder and the burnt-in timestamp text; only weak, diffuse activation over the lungs."
+True positives,test/PNEUMONIA/person47_virus_99.jpeg,virus,1.0,0.376,0.785,0.646,central,mixed,Two foci: left lower lung zone (plausible) and the top-right corner over the scanner text block (mA/kV values).
+False negatives,test/PNEUMONIA/person154_bacteria_728.jpeg,bacteria,0.0016,0.742,0.933,0.933,off-anatomy?,outside,Map is cold over both lungs; the only activation is a small spot in the bottom-right image corner below the left hemithorax.
+False negatives,test/PNEUMONIA/person60_virus_117.jpeg,virus,0.1868,0.572,0.933,0.785,off-anatomy?,outside,"Activation on the lateral chest wall / image edge below the left lung base, not on lung parenchyma."
+False positives,test/NORMAL/NORMAL2-IM-0256-0001.jpeg,normal,1.0,0.323,0.785,0.354,central,lung,"Activation over the left lung and centre of a hazy, low-contrast film; looks like the model read the haze as opacity."
+False positives,test/NORMAL/IM-0022-0001.jpeg,normal,1.0,0.338,0.211,0.498,central,mixed,"Two foci: one sits exactly on the large ""R"" laterality letter at the left edge, the other over the left lung."
+False positives,test/NORMAL/NORMAL2-IM-0246-0001.jpeg,normal,0.9999,0.404,0.789,0.789,central,mixed,"Strong focus on the ""R"" laterality letter (top-left corner) plus the left lower zone next to the ""KV58"" text (bottom-right)."
+True negatives,test/NORMAL/IM-0070-0001.jpeg,normal,0.0,,0.0,0.0,empty,empty,No positive PNEUMONIA evidence anywhere (p=0.000); expected for a confident negative.
+True negatives,test/NORMAL/IM-0103-0001.jpeg,normal,0.0,,0.0,0.0,empty,empty,No positive PNEUMONIA evidence anywhere (p=0.000); expected for a confident negative.
+True negatives,test/NORMAL/NORMAL2-IM-0348-0001.jpeg,normal,0.0,,0.0,0.0,empty,empty,No positive PNEUMONIA evidence anywhere (p=0.000); expected for a confident negative.

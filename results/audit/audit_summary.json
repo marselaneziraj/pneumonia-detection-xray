@@ -1,0 +1,110 @@
+{
+  "generated_at": "2026-11-04T21:38:15Z",
+  "kaggle_dataset": "paultimothymooney/chest-xray-pneumonia",
+  "download_cmd": "kaggle datasets download -d paultimothymooney/chest-xray-pneumonia -p data --unzip",
+  "dataset_root": "data/chest_xray",
+  "n_images": 5856,
+  "n_patients": 3257,
+  "n_unparsed_names": 144,
+  "official_counts": [
+    {
+      "official_split": "test",
+      "images_NORMAL": 234,
+      "images_PNEUMONIA": 390,
+      "patients_NORMAL": 234,
+      "patients_PNEUMONIA": 202,
+      "images_total": 624,
+      "patients_total": 436,
+      "pos_to_neg_ratio": 1.67
+    },
+    {
+      "official_split": "train",
+      "images_NORMAL": 1341,
+      "images_PNEUMONIA": 3875,
+      "patients_NORMAL": 1340,
+      "patients_PNEUMONIA": 1636,
+      "images_total": 5216,
+      "patients_total": 2976,
+      "pos_to_neg_ratio": 2.89
+    },
+    {
+      "official_split": "val",
+      "images_NORMAL": 8,
+      "images_PNEUMONIA": 8,
+      "patients_NORMAL": 8,
+      "patients_PNEUMONIA": 7,
+      "images_total": 16,
+      "patients_total": 15,
+      "pos_to_neg_ratio": 1.0
+    }
+  ],
+  "split_counts": [
+    {
+      "split": "train",
+      "class_name": "NORMAL",
+      "images": 1080,
+      "patients": 1079
+    },
+    {
+      "split": "train",
+      "class_name": "PNEUMONIA",
+      "images": 2720,
+      "patients": 1178
+    },
+    {
+      "split": "train",
+      "class_name": "ALL",
+      "images": 3800,
+      "patients": 2257
+    },
+    {
+      "split": "val",
+      "class_name": "NORMAL",
+      "images": 269,
+      "patients": 269
+    },
+    {
+      "split": "val",
+      "class_name": "PNEUMONIA",
+      "images": 706,
+      "patients": 295
+    },
+    {
+      "split": "val",
+      "class_name": "ALL",
+      "images": 975,
+      "patients": 564
+    },
+    {
+      "split": "test",
+      "class_name": "NORMAL",
+      "images": 234,
+      "patients": 234
+    },
+    {
+      "split": "test",
+      "class_name": "PNEUMONIA",
+      "images": 390,
+      "patients": 202
+    },
+    {
+      "split": "test",
+      "class_name": "ALL",
+      "images": 624,
+      "patients": 436
+    }
+  ],
+  "split_info": {
+    "test_trainval_shared_patient_ids": 170,
+    "dropped_trainval_images_for_test_overlap": 457,
+    "val_fraction": 0.2,
+    "n_splits": 5,
+    "seed": 42
+  },
+  "shortcut_probe_val_auroc": {
+    "size_only": 0.9188,
+    "border_intensity_only": 0.7716,
+    "size_and_border": 0.9392,
+    "note": "Val AUROC of a logistic regression on non-anatomical metadata only. 0.5 = no shortcut signal."
+  }
+}

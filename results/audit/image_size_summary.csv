@@ -1,0 +1,5 @@
+,width,width,width,width,width,width,width,width,height,height,height,height,height,height,height,height,aspect,aspect,aspect,aspect,aspect,aspect,aspect,aspect
+,count,mean,std,min,5%,50%,95%,max,count,mean,std,min,5%,50%,95%,max,count,mean,std,min,5%,50%,95%,max
+class_name,,,,,,,,,,,,,,,,,,,,,,,,
+NORMAL,1583.0,1686.38,305.32,912.0,1252.4,1654.0,2279.6,2916.0,1583.0,1378.65,343.02,496.0,927.1,1323.0,2035.6,2713.0,1583.0,1.25,0.15,0.88,1.02,1.24,1.52,2.11
+PNEUMONIA,4273.0,1195.07,285.15,384.0,816.6,1160.0,1709.6,2772.0,4273.0,819.55,270.86,127.0,480.0,776.0,1320.0,2304.0,4273.0,1.51,0.25,0.84,1.18,1.49,1.92,3.38

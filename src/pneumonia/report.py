@@ -48,7 +48,8 @@ def results_table(res: pd.DataFrame, metrics: dict, split: str = "test") -> str:
     for _, r in d.iterrows():
         ci = None
         mm = models.get(r["model"], {})
-        if r["kind"] == "model" and mm.get("status") == "evaluated":
+        # the bootstrap CIs in metrics.json are computed on the test split only
+        if r["kind"] == "model" and mm.get("status") == "evaluated" and split == "test":
             ci = (
                 mm["test_ci_at_shipped"]
                 if r["threshold_rule"].startswith("val-tuned")
@@ -188,7 +189,8 @@ def error_block(metrics: dict) -> str:
         f"- Exposure: mean pixel intensity of misses {_f(ea['mean_intensity_fn'])} vs "
         f"{_f(ea['mean_intensity_tp'])} for true positives; contrast (pixel std) "
         f"{_f(ea['contrast_std_fn'])} vs {_f(ea['contrast_std_tp'])}.\n"
-        f"- Lowest-scored misses (the confidently wrong ones): {ea['fn_lowest_scores']}. "
+        f"- Lowest-scored misses (the confidently wrong ones): "
+        f"{[round(x, 4) for x in ea['fn_lowest_scores']]}. "
         f"Full list: `results/false_negatives.csv`."
     )
 
@@ -199,26 +201,25 @@ def gradcam_block(results_dir: Path) -> str:
         return "_Run `pneumonia gradcam --per-case 3` to produce the panel and audit sheet._"
     s = json.loads(sp.read_text())
     a = pd.read_csv(ap).fillna("")
+    cats = ["lung", "outside", "mixed", "empty"]
     lines = [
-        "| Case type | Maps | Auto: off-anatomy? | Auto: empty map | Manual: lung | "
-        "Manual: outside | Manual: mixed | Not yet reviewed |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Case type | Maps | Auto: off-anatomy? | Auto: empty | By eye: lung | By eye: outside "
+        "| By eye: mixed | By eye: empty | Not reviewed |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
+
+    def row(label, g):
+        ml = g["manual_location"].str.lower().str.strip()
+        counts = " | ".join(str((ml == c).sum()) for c in cats)
+        return (
+            f"| {label} | {len(g)} | {(g['auto_flag'] == 'off-anatomy?').sum()} | "
+            f"{(g['auto_flag'] == 'empty').sum()} | {counts} | {(~ml.isin(cats)).sum()} |"
+        )
+
     order = ["True positives", "False negatives", "False positives", "True negatives"]
     for ct in order + [c for c in a["case_type"].unique() if c not in order]:
-        g = a[a["case_type"] == ct]
-        ml = g["manual_location"].str.lower()
-        lines.append(
-            f"| {ct} | {len(g)} | {(g['auto_flag'] == 'off-anatomy?').sum()} | "
-            f"{(g['auto_flag'] == 'empty').sum()} | {(ml == 'lung').sum()} | {(ml == 'outside').sum()} | "
-            f"{(ml == 'mixed').sum()} | {(ml == '').sum()} |"
-        )
-    ml = a["manual_location"].str.lower()
-    lines.append(
-        f"| **All** | {len(a)} | {s['auto_off_anatomy']} | {(a['auto_flag'] == 'empty').sum()} | "
-        f"{(ml == 'lung').sum()} | "
-        f"{(ml == 'outside').sum()} | {(ml == 'mixed').sum()} | {(ml == '').sum()} |"
-    )
+        lines.append(row(ct, a[a["case_type"] == ct]))
+    lines.append(row("**All**", a))
     lines.append("")
     lines.append(
         f"Auto-flag off-anatomy? = CAM peak in the outer {int(100 * 0.12)}% band, or >60% of CAM "

@@ -310,7 +310,7 @@ def score_histogram(y, s, threshold: float, path, title="Test scores by true cla
     )
     ax.set(xlabel="Predicted P(PNEUMONIA)", ylabel="Images (log scale)", title=title)
     ax.set_yscale("log")
-    ax.legend(fontsize=8, loc="upper center")
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.62, 1.0))
     return _save(fig, path)
 
 

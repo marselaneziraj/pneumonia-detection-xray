@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "marselaneziraj" }]
+authors = [{ name = "Marsela Neziraj" }]
 keywords = ["pneumonia", "chest-xray", "medical-imaging", "grad-cam", "pytorch", "densenet"]
 classifiers = [
     "Programming Language :: Python :: 3",
